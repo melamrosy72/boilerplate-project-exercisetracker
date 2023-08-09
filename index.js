@@ -54,7 +54,7 @@ app.post('/api/users/:_id/exercises',async(req,res)=>{
   const {_id}=req.params
   const newLog={description,duration,date}
   const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
-  res.status(200).json({username:updatedUser.username , description , duration , date , _id:updatedUser._id})
+  res.json({username:updatedUser.username , description , duration , date , _id:updatedUser._id})
 })
 
 //fetching user log && ability to specify date
