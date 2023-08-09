@@ -49,14 +49,20 @@ app.get('/api/users',async(req,res)=>{
 
 // creatiing new exercise 
 app.post('/api/users/:_id/exercises',async(req,res)=>{
-  const {description,duration}=req.body
-  const date=new Date(req.body.date).toDateString() || new Date().toDateString()
-  console.log(new Date(req.body.date).toDateString())
-  console.log(new Date().toDateString());
-  const {_id}=req.params
-  const newLog={description,duration,date}
-  const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
-  res.json({username:updatedUser.username , description , duration , date , _id:updatedUser._id})
+  try {
+    const {description,duration}=req.body
+    const date=new Date(req.body.date).toDateString() || new Date().toDateString()
+    console.log(new Date(req.body.date).toDateString())
+    console.log(new Date().toDateString());
+    const {_id}=req.params
+    const newLog={description,duration,date}
+    const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
+    res.json({username:updatedUser.username , description , duration , date , _id:updatedUser._id})
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+
 })
 
 //fetching user log && ability to specify date
