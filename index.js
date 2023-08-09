@@ -50,7 +50,7 @@ app.get('/api/users',async(req,res)=>{
 // creatiing new exercise 
 app.post('/api/users/:_id/exercises',async(req,res)=>{
   const {description,duration}=req.body
-  const date= req.body.date || new Date()
+  const date= req.body.date || new Date().toDateString()
   const {_id}=req.params
   const newLog={description,duration,date}
   const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
@@ -59,18 +59,21 @@ app.post('/api/users/:_id/exercises',async(req,res)=>{
 
 //fetching user log && ability to specify date
 app.get('/api/users/:_id/logs',async(req,res)=>{
-  const {_id , limit }=req.params
-  const dateFrom = new Date(req.query.from)
-  const dateTo = new Date(req.query.to);
+  const {_id  }=req.params
+  const {dateFrom ,dateTo , limit}=req.query
 
   const user=await User.findById(_id)
+
   let filteredLogs = user.log;
 
-  if (dateFrom && dateTo) {
+  if (dateFrom && dateTo) { 
     filteredLogs = user.log.filter(log => {
       const logDate = new Date(log.date);
-      return logDate >= dateFrom && logDate <= dateTo;
+      return logDate >= new Date(dateFrom) && logDate <= new Date(dateTo);
     });
+  }
+  if(limit){
+    filteredLogs=filteredLogs.slice(0, parseInt(limit))
   }
   const transformedResponse = {
     username: user.username,
