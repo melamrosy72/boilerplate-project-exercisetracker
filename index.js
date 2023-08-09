@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
       log:[{     
         description:{type: String},
         duration:{type: Number},
-        date:{type: Date , default : Date.now},
+        date:{type:Date  },
       }]
   }
 );
@@ -51,6 +51,8 @@ app.get('/api/users',async(req,res)=>{
 app.post('/api/users/:_id/exercises',async(req,res)=>{
   const {description,duration}=req.body
   const date=new Date(req.body.date).toDateString() || new Date().toDateString()
+  console.log(new Date(req.body.date).toDateString())
+  console.log(new Date().toDateString());
   const {_id}=req.params
   const newLog={description,duration,date}
   const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
