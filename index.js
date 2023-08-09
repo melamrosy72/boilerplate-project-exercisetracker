@@ -50,7 +50,7 @@ app.get('/api/users',async(req,res)=>{
 // creatiing new exercise 
 app.post('/api/users/:_id/exercises',async(req,res)=>{
   const {description,duration}=req.body
-  const date= req.body.date || new Date().toDateString()
+  const date=new Date(req.body.date).toDateString() || new Date().toDateString()
   const {_id}=req.params
   const newLog={description,duration,date}
   const updatedUser=await User.findByIdAndUpdate(_id,{$push:{log:newLog}},{new:true}) 
